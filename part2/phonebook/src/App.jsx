@@ -5,6 +5,7 @@ const App = () => {
     { name: 'Arto Hellas', id: 1}
   ]) 
   const [newName, setNewName] = useState('')
+  const [number, setNumber] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault() 
@@ -17,9 +18,11 @@ const App = () => {
 
     // create react ID for the new person
     const personId = persons.length > 0 ? Math.max(...persons.map(p => p.id)) + 1 : 1;
+    const newNumber = number
     const newPerson = {
       name: newName,
-      id: personId
+      id: personId,
+      number: newNumber
     }
     
     // add the newName to the PHONEBOOK (persons obj)
@@ -30,10 +33,17 @@ const App = () => {
 
     // reset the newName input field
     setNewName('')
+    setNumber('')
   } 
 
+  // component to handle name input
   const handleInput = (event) => {
     setNewName(event.target.value)
+  }
+
+  // component to handle number 
+  const handleInputNumber = (event) => {
+    setNumber(event.target.value)
   }
 
 
@@ -45,13 +55,16 @@ const App = () => {
           name: <input value={newName} onChange={handleInput}/>
         </div>
         <div>
+          number: <input value={number} onChange={handleInputNumber}></input>
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
 
       {persons.map(person => 
-        <div key={person.id}>{person.name}</div>
+        <div key={person.id}>{person.name} {person.number}</div>
         )}
     </div>
   )
