@@ -9,9 +9,13 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault() 
     
+    if (persons.some(person => person.name == newName)) {
+      alert(`${newName} is already added to phonebook`);
+      setNewName('')
+      return;
+    }
+
     // create react ID for the new person
-      // if persons array not empty --> create an array with any id (.map())
-      // and take as id the max id in this array; if array is empty take 1 as id
     const personId = persons.length > 0 ? Math.max(...persons.map(p => p.id)) + 1 : 1;
     const newPerson = {
       name: newName,
