@@ -64,12 +64,16 @@ const App = () => {
 
   // componente to handle deletePerson
   const handleDeletePerson = (id) => {
-    personsService
-    .deletePerson(id)
-    .then(() => {
-      setPersons(persons.filter(person => person.id !== id))  
-    })
-  }
+
+    const personToDelete = persons.find(person => person.id === id)
+
+    if (window.confirm(`Delete ${personToDelete.name}?`))
+      personsService
+      .deletePerson(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id))  
+      })
+    }
 
   const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
 
