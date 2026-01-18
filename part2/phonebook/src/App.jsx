@@ -24,29 +24,48 @@ const App = () => {
     event.preventDefault() 
     
     if (persons.some(person => person.name == newName)) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName('')
-      setNumber('')
-      return;
-    }
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number 
+        with a new one?`)) {
+          const existingPerson = persons.find(person => person.name === newName)
+          const id = existingPerson.id
 
-    const newPerson = {
-      name: newName,
-      number: number,
-    }
+          const updatedPerson = {
+            name: newName,
+            number: number
+          }
 
-    personsService
-    .create(newPerson)
-    .then(returnedPerson => {
-      setPersons(persons.concat(returnedPerson))
-      setNewName('')
-      setNumber('')
-    })
-    .catch(error => {
-      console.error('Error adding persons:', error)
-      alert('Failed to add persone to phonebook')
-    })
-  }
+          personsService
+          .update(id, updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => 
+              person.id === returnedPerson.id ? returnedPerson : person ))
+          })
+
+        } else {
+            setNewName('')
+            setNumber('')
+            return;
+      }
+    }
+    else {
+      const newPerson = {
+        name: newName,
+        number: number,
+      }
+
+      personsService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNumber('')
+      })
+      .catch(error => {
+        console.error('Error adding persons:', error)
+        alert('Failed to add persone to phonebook')
+      })
+    }}
+      
   // component to handle name input
   const handleInput = (event) => {
     setNewName(event.target.value)
@@ -62,7 +81,7 @@ const App = () => {
     setSearch(event.target.value)
   }
 
-  // componente to handle deletePerson
+  // component to handle deletePerson
   const handleDeletePerson = (id) => {
 
     const personToDelete = persons.find(person => person.id === id)
@@ -74,6 +93,7 @@ const App = () => {
         setPersons(persons.filter(person => person.id !== id))  
       })
     }
+
 
   const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
 
