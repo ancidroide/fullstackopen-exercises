@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import PersonsList from './components/PersonsList'
 import SearchFilter from './components/SearchFilter'
 import PersonForm from './components/PersonForm'
-import axios from 'axios'
+// import axios from 'axios'
+import personsService from './services/persons.js'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -10,14 +11,13 @@ const App = () => {
   const [number, setNumber] = useState('')
   const [search, setSearch] = useState('')
 
+
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
+    personsService
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
+    })
   }, [])
 
   const handleSubmit = (event) => {
@@ -35,18 +35,18 @@ const App = () => {
       number: number,
     }
 
-    axios.post('http://localhost:3000/persons', newPerson)
-    .then(response => {
-      setPersons(persons.concat(response.data))
+    personsService
+    .create(newPerson)
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson))
       setNewName('')
       setNumber('')
     })
     .catch(error => {
-      console.error('Error adding person:' , error)
-      alert('Failed to add person to phonebook')
+      console.error('Error adding persons:', error)
+      alert('Failed to add persone to phonebook')
     })
   }
-
   // component to handle name input
   const handleInput = (event) => {
     setNewName(event.target.value)
