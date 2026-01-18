@@ -26,28 +26,26 @@ const App = () => {
     if (persons.some(person => person.name == newName)) {
       alert(`${newName} is already added to phonebook`);
       setNewName('')
+      setNumber('')
       return;
     }
 
-    // create react ID for the new person
-    const personId = persons.length > 0 ? Math.max(...persons.map(p => p.id)) + 1 : 1;
-    const newNumber = number
     const newPerson = {
       name: newName,
-      id: personId,
-      number: newNumber
+      number: number,
     }
-    
-    // add the newName to the PHONEBOOK (persons obj)
-    setPersons([
-      ...persons,
-      newPerson
-    ])
 
-    // reset the newName input field
-    setNewName('')
-    setNumber('')
-  } 
+    axios.post('http://localhost:3000/persons', newPerson)
+    .then(response => {
+      setPersons(persons.concat(response.data))
+      setNewName('')
+      setNumber('')
+    })
+    .catch(error => {
+      console.error('Error adding person:' , error)
+      alert('Failed to add person to phonebook')
+    })
+  }
 
   // component to handle name input
   const handleInput = (event) => {
@@ -89,7 +87,5 @@ const App = () => {
   )
 }
 
+
 export default App
-
-
-
