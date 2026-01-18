@@ -62,6 +62,15 @@ const App = () => {
     setSearch(event.target.value)
   }
 
+  // componente to handle deletePerson
+  const handleDeletePerson = (id) => {
+    personsService
+    .deletePerson(id)
+    .then(() => {
+      setPersons(persons.filter(person => person.id !== id))  
+    })
+  }
+
   const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
@@ -82,7 +91,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <PersonsList filteredPersons={filteredPersons} />
+      <PersonsList filteredPersons={filteredPersons} onDeletePerson={handleDeletePerson}/>
     </div>
   )
 }
