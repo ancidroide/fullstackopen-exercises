@@ -4,12 +4,13 @@ import SearchFilter from './components/SearchFilter'
 import PersonForm from './components/PersonForm'
 // import axios from 'axios'
 import personsService from './services/persons.js'
-
+import './index.css'
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [number, setNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [succesMessage, setSuccesMessage] = useState(null)
 
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(person => 
               person.id === returnedPerson.id ? returnedPerson : person ))
+
           })
 
         } else {
@@ -57,9 +59,16 @@ const App = () => {
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setSuccesMessage(`Added ${newName}`)
+        
+        setTimeout(() => {
+          setSuccesMessage(null);
+          }, 5000)
+        
         setNewName('')
         setNumber('')
       })
+
       .catch(error => {
         console.error('Error adding persons:', error)
         alert('Failed to add persone to phonebook')
@@ -100,6 +109,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      {succesMessage && <div className='success'>{succesMessage}</div>}
 
       <SearchFilter handler={handleSearch} value={search} />
 
