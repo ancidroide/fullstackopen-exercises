@@ -11,6 +11,7 @@ const App = () => {
   const [number, setNumber] = useState('')
   const [search, setSearch] = useState('')
   const [succesMessage, setSuccesMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
   useEffect(() => {
@@ -40,8 +41,20 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(person => 
               person.id === returnedPerson.id ? returnedPerson : person ))
-
+          
+            setSuccesMessage(`Updated ${returnedPerson}'s number`)
+            setTimeout(() => {
+              setSuccesMessage(null)
+            }, 5000);
           })
+
+          .catch(() => {
+            setErrorMessage(`Information of ${newName} has already been removed from the server`);
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000);
+          })
+          
 
         } else {
             setNewName('')
@@ -111,6 +124,7 @@ const App = () => {
       <h2>Phonebook</h2>
 
       {succesMessage && <div className='success'>{succesMessage}</div>}
+      {errorMessage && <div className='error'>{errorMessage}</div>}
 
       <SearchFilter handler={handleSearch} value={search} />
 
