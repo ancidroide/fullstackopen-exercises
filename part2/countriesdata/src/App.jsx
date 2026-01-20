@@ -26,6 +26,7 @@ const App = () => {
   const handleShowDetails = (country) => {
     setSearch(country.name.common)
   }
+  
   // filtered countries (state array) based on SearchFilter value
   const filteredCountries = countries.filter(country => country.name.common.toLowerCase()
   .includes(search.toLocaleLowerCase()))
