@@ -22,6 +22,10 @@ const App = () => {
     setSearch(event.target.value)
   }
 
+  // show info for a single country when the list of results is between 2 and 10
+  const handleShowDetails = (country) => {
+    setSearch(country.name.common)
+  }
   // filtered countries (state array) based on SearchFilter value
   const filteredCountries = countries.filter(country => country.name.common.toLowerCase()
   .includes(search.toLocaleLowerCase()))
@@ -30,7 +34,7 @@ const App = () => {
   return (
     <div>
       <SearchFilter handler={handleSearch} value={search}/>
-      <CountriesList filteredCountries={filteredCountries} />
+      <CountriesList filteredCountries={filteredCountries} handleShowDetails={handleShowDetails}/>
 
     </div>
   )

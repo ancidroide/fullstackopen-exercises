@@ -1,6 +1,6 @@
 import Country from "./Country"
 
-const CountriesList = ( {filteredCountries} ) => {
+const CountriesList = ( {filteredCountries, handleShowDetails} ) => {
 
     // too many countries
     if (filteredCountries.length > 10) {
@@ -14,10 +14,14 @@ const CountriesList = ( {filteredCountries} ) => {
             <div>
                 <ul>
                     {filteredCountries.map(country => 
-                        <li key={country.name.common}>{country.name.common}</li>)}
+                        <li key={country.name.common}>
+                            {country.name.common}
+                            <button onClick={() => handleShowDetails(country)}>Show</button>
+                        </li>)}
                 </ul>
             </div>
         )
+
         // exactly 1 country found
     } else if (filteredCountries.length === 1) {
         const foundCountry = filteredCountries[0]
