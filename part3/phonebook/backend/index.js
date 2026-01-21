@@ -26,13 +26,13 @@ const persons = [
 ]
 
 
-
+// GET .json --> Exercise 3.1 (phonebook backend step 1)
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
 
-
+// GET info --> Exercise 3.2 (phonebook backend step 2)
 app.get('/info', (request, response) => {
   const arrLenght = persons.length
   const time = new Date()
@@ -45,6 +45,19 @@ app.get('/info', (request, response) => {
   `
   response.send(htmlResponse)
 })
+
+
+// GET single person --> url = http://localhost:3001/api/persons/5
+app.get('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const person = persons.find(person => person.id === id)
+  
+  person ? response.json(person) : response.status(404).json({ error: 'person not found'} )
+}) 
+
+
+
+
 
 const PORT = 3001
 app.listen(PORT, () => {
