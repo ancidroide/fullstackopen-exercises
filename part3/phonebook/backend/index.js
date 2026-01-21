@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 
-const persons = [
+let persons = [
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -41,7 +41,7 @@ app.get('/info', (request, response) => {
   <div>
     <p>Phonebook has info for ${arrLenght} ${arrLenght === 1 ? 'person' : 'people'}</p>
     <p>${time.toString()}</p>
-  </div
+  </div>
   `
   response.send(htmlResponse)
 })
@@ -62,6 +62,26 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
+ 
+// POST new pewrson --> url = http://localhost:3001/api/persons/
+app.post('/api/persons', (request, response) => {
+
+  const { name, number } = request.body
+
+  if (!name || !number) {
+    return response.status(400).json({ error: 'name or number missing' })
+  }
+
+  const newPersonId = Math.random().toString(36).substring(2, 9)
+  const newPerson =  {
+    id: newPersonId,
+    name: name,
+    number: number,
+  }
+
+  persons = persons.concat(newPerson)
+  response.json(newPerson)
+})
 
 
 const PORT = 3001
