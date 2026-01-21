@@ -6,3 +6,10 @@ GET http://localhost:3001/info
 
 ### GET single person
 GET http://localhost:3001/api/persons/5
+
+### DELETE single person
+DELETE http://localhost:3001/api/persons/5
+
+### POST new person
+POST http://localhost:3001/api/persons/
+

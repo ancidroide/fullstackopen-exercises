@@ -55,7 +55,12 @@ app.get('/api/persons/:id', (request, response) => {
   person ? response.json(person) : response.status(404).json({ error: 'person not found'} )
 }) 
 
-
+// DELETE single person --> url = http://localhost:3001/api/persons/5
+app.delete('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  persons.filter(person => person.id != id)
+  response.status(204).end()
+})
 
 
 
