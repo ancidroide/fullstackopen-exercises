@@ -47,7 +47,7 @@ app.get('/info', (request, response) => {
 })
 
 
-// GET single person --> url = http://localhost:3001/api/persons/5
+// GET single person --> Exercise 3.3 (phonebook backend step 3) url = http://localhost:3001/api/persons/5
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
   const person = persons.find(person => person.id === id)
@@ -55,7 +55,7 @@ app.get('/api/persons/:id', (request, response) => {
   person ? response.json(person) : response.status(404).json({ error: 'person not found'} )
 }) 
 
-// DELETE single person --> url = http://localhost:3001/api/persons/5
+// DELETE single person -->  Exercise 3.4 (phonebook backend step 4) url = http://localhost:3001/api/persons/5
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
   persons.filter(person => person.id != id)
@@ -63,7 +63,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
  
-// POST new pewrson --> url = http://localhost:3001/api/persons/
+// POST new pewrson -->  Exercise 3.5 (phonebook backend step 5) url = http://localhost:3001/api/persons/
 app.post('/api/persons', (request, response) => {
 
   const { name, number } = request.body
