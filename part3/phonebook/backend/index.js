@@ -1,7 +1,13 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-app.use(morgan('tiny'));
+
+// custom morgan token
+morgan.token('body', (request, response) => {
+  return JSON.stringify(request.body)
+})
+
+app.use(morgan(':method :url :status :response-time :res[content-length] :body'));
 app.use(express.json())
 
 let persons = [
@@ -60,7 +66,7 @@ app.get('/api/persons/:id', (request, response) => {
 // DELETE single person -->  Exercise 3.4 (phonebook backend step 4) url = http://localhost:3001/api/persons/5
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  persons.filter(person => person.id != id)
+  persons = persons.filter(person => person.id != id)
   response.status(204).end()
 })
 
