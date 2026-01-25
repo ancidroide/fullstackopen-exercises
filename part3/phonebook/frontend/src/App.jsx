@@ -42,7 +42,7 @@ const App = () => {
             setPersons(persons.map(person => 
               person.id === returnedPerson.id ? returnedPerson : person ))
           
-            setSuccesMessage(`Updated ${returnedPerson}'s number`)
+            setSuccesMessage(`Updated ${returnedPerson.name}'s number`)
             setTimeout(() => {
               setSuccesMessage(null)
             }, 5000);
