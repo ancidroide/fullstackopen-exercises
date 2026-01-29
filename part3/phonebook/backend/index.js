@@ -9,11 +9,11 @@ const morgan = require('morgan')
 app.use(express.static('dist'))
 
 // custom morgan token
-morgan.token('body', (request, response) => {
+morgan.token('body', (request) => {
   return JSON.stringify(request.body)
 })
 
-app.use(morgan(':method :url :status :response-time :res[content-length] :body'));
+app.use(morgan(':method :url :status :response-time :res[content-length] :body'))
 
 
 // GET .json --> Exercise 3.1 (phonebook backend step 1)
@@ -23,7 +23,7 @@ app.get('/api/persons', (request, response, next) => {
       response.json(persons)
     })
     .catch(error => next(error))
-    })
+})
 
 // GET info --> Exercise 3.2 (phonebook backend step 2)
 app.get('/info', (request, response, next) => {
@@ -39,7 +39,7 @@ app.get('/info', (request, response, next) => {
       response.send(htmlResponse)
     })
     .catch(error => next(error))
-  })
+})
 
 
 
@@ -56,19 +56,19 @@ app.get('/api/persons/:id', (request, response, next) =>  {
       }
     })
     .catch(error => next(error))
-  }
+}
 )
 // DELETE single person -->  Exercise 3.4 (phonebook backend step 4) url = http://localhost:3001/api/persons/5
 app.delete('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
 
   Person.findByIdAndDelete(id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
-  })
- 
+})
+
 // POST new person -->  Exercise 3.5 (phonebook backend step 5) url = http://localhost:3001/api/persons/
 app.post('/api/persons', (request, response, next) => {
   const { name, number } = request.body
@@ -96,7 +96,7 @@ app.put('/api/persons/:id', (request, response, next) => {
   }
   const id = request.params.id
 
-  Person.findByIdAndUpdate(id, person, { new: true})
+  Person.findByIdAndUpdate(id, person, { new: true })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
@@ -118,7 +118,7 @@ const errorHandler = (error, request, response, next) => {
   }
   if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
-  } 
+  }
   next(error)
 }
 
