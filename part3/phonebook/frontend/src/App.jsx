@@ -83,8 +83,10 @@ const App = () => {
       })
 
       .catch(error => {
-        console.error('Error adding persons:', error)
-        alert('Failed to add persone to phonebook')
+        setErrorMessage(`Person validation failed, name: ${error.response.data.error}`)
+        setTimeout(() => {
+          setSuccesMessage(null);
+        }, 5000)
       })
     }}
       
