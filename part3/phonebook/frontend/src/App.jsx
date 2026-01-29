@@ -85,7 +85,7 @@ const App = () => {
       .catch(error => {
         setErrorMessage(`Person validation failed, name: ${error.response.data.error}`)
         setTimeout(() => {
-          setSuccesMessage(null);
+          setErrorMessage(null);
         }, 5000)
       })
     }}

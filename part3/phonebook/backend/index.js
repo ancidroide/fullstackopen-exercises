@@ -71,12 +71,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
  
 // POST new person -->  Exercise 3.5 (phonebook backend step 5) url = http://localhost:3001/api/persons/
 app.post('/api/persons', (request, response, next) => {
-
   const { name, number } = request.body
-
-  if (!name || !number) {
-    return response.status(400).json({ error: 'name or number missing' })
-  }
 
   const person = new Person({
     name: name,

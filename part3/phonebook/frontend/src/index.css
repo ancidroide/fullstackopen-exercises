@@ -1,6 +1,19 @@
+/* common style for success and errors */
+.success, .error {
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* specific style for success (green) */
 .success {
-    background-color: green;
-    border-color: black;
-    border-radius: 5%;
-    color: white
+  color: green;
+}
+
+/* specific style for error (red) */
+.error {
+  color: red;
 }
