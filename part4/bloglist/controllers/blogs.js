@@ -1,4 +1,5 @@
 const blogsRouter  = require('express').Router()
+const blog = require('../models/blog')
 const Blog = require('../models/blog')
 
 // get all blogs
@@ -32,11 +33,21 @@ blogsRouter.get('/:id', async (request, response) => {
     }
 })
 
-// delete a single note
+// delete a single blog
 blogsRouter.delete('/:id', async (request, response) => {
     const deleted = await Blog.findByIdAndDelete(request.params.id)
     if (deleted) {
         response.status(204).end()
+    }
+})
+
+// update specific blog (PUT request)
+blogsRouter.put('/:id', async (request, response) => {
+    const body = request.body
+    const updatedBlog = Blog.findByIdAndUpdate(request.params.id, body, { new: true })
+
+    if (updatedBlog) {
+        response.json(updatedBlog)
     }
 })
 

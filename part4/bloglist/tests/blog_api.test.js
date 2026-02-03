@@ -80,5 +80,70 @@ test('a single blog can be deleted', async () => {
     assert(blogsAtStart.length === blogsAtEnd.length + 1)
 
     const ids = blogsAtEnd.map(blog => blog.id)
-    assert(!titles.includes(blogToDelete.id))
+    assert(!ids.includes(blogToDelete.id))
+})
+
+// test if id and not _it
+test('blog contains id and not _id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToTest = blogsAtStart[0]
+
+    assert(blogToTest.id)
+    assert(!blogToTest._id)
+})
+
+// test default likes
+test('if likes property is missing, it defaults to 0', async () => {
+    const newBlog = {
+        title: 'music blog',
+        author: 'Dave Lee',
+        url: 'www.musicblog.co'
+    }
+
+    const savedBlog = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(savedBlog.body.likes, 0)
+})
+
+test('if title proprerty is missing it gets 404', async () => {
+    const newBlog = {
+        author: 'Dave Lee',
+        url: 'www.musicblog.co',
+    }
+
+    const savedBlog = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+})
+
+test('if url proprerty is missing it gets 404', async () => {
+    const newBlog = {
+        author: 'Dave Lee',
+        title: 'Music Blog',
+    }
+
+    const savedBlog = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+})
+
+// test if single blog can be deleted
+test('single blog can be updated with a PUT request', async () =>  {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = { ...blogsAtStart[0], likes: 570 }
+    
+    const updatedBlog = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200)
+    
+    
+    assert(response.body.likes, 570)
+      
 })
