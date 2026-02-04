@@ -6,13 +6,27 @@ const app = require('../app')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
 
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
+
 const api = supertest(app)
 
 
 // this function gest executed before every single test (as the name suggests --> beforeEach means before each test)
 beforeEach(async () => {
     await Blog.deleteMany({}) // empty the test DB
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User ({
+        username: 'root',
+        passwordHash,
+    })
+
+    await user.save()
     await Blog.insertMany(helper.initialBlogs)
+
+    
 })
 
 test('blogs are returned as json', async () => {
@@ -35,7 +49,15 @@ test('a specific blog is whitin the returned ones', async () => {
 
 // test if a valid post request can be done --> part 4(b)
 test('a valid blog can be added', async () => {
-    const newBlog = { title: 'React patterns', author: 'Michael Chan', url: 'https://reactpatterns.com/', likes: 7 }
+    const users = await helper.usersInDb()
+    const userId = users[0].id
+    const newBlog = {
+        title: 'React patterns',
+        author: 'Michael Chan', 
+        url: 'https://reactpatterns.com/', 
+        likes: 7,
+        userId: userId,
+    }
 
     await api
       .post('/api/blogs/')
@@ -94,10 +116,13 @@ test('blog contains id and not _id', async () => {
 
 // test default likes
 test('if likes property is missing, it defaults to 0', async () => {
+    const users = await helper.usersInDb()
+    const userId = users[0].id
     const newBlog = {
         title: 'music blog',
         author: 'Dave Lee',
-        url: 'www.musicblog.co'
+        url: 'www.musicblog.co',
+        userId: userId,
     }
 
     const savedBlog = await api
@@ -113,6 +138,7 @@ test('if title proprerty is missing it gets 404', async () => {
     const newBlog = {
         author: 'Dave Lee',
         url: 'www.musicblog.co',
+        userId: '111'
     }
 
     const savedBlog = await api
@@ -125,6 +151,7 @@ test('if url proprerty is missing it gets 404', async () => {
     const newBlog = {
         author: 'Dave Lee',
         title: 'Music Blog',
+        userId: '111'
     }
 
     const savedBlog = await api
@@ -144,6 +171,6 @@ test('single blog can be updated with a PUT request', async () =>  {
       .expect(200)
     
     
-    assert(response.body.likes, 570)
+    assert(updatedBlog.body.likes, 570)
       
 })
