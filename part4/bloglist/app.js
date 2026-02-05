@@ -24,6 +24,7 @@ mongoose.connect(mongoUrl, { family: 4 })
 app.use(express.static('disdt'))
 app.use(express.json())
 app.use(middleware.requestLogger)
+app.use(middleware.tokenExtractor)
 
 // route
 app.use('/api/blogs', blogsRouter)
