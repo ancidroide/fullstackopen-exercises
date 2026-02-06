@@ -9,6 +9,8 @@ const helper = require('./test_helper')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
+let token
+
 const api = supertest(app)
 
 
@@ -23,8 +25,22 @@ beforeEach(async () => {
         passwordHash,
     })
 
-    await user.save()
-    await Blog.insertMany(helper.initialBlogs)
+    const savedUser = await user.save()
+
+    const response = await api
+      .post('/api/login')
+      .send({ 
+        username: 'root', 
+        password: 'sekret'
+    })
+
+    token = response.body.token
+
+    const blogsWithUser = helper.initialBlogs.map(blog => ({
+        ...blog, user: savedUser._id
+    }))
+
+    await Blog.insertMany(blogsWithUser)
 
     
 })
@@ -61,6 +77,7 @@ test('a valid blog can be added', async () => {
 
     await api
       .post('/api/blogs/')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -96,6 +113,7 @@ test('a single blog can be deleted', async () => {
 
     const resultBlog = await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
     
     const blogsAtEnd = await helper.blogsInDb()
@@ -127,6 +145,7 @@ test('if likes property is missing, it defaults to 0', async () => {
 
     const savedBlog = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -143,6 +162,7 @@ test('if title proprerty is missing it gets 404', async () => {
 
     const savedBlog = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
 })
@@ -156,6 +176,7 @@ test('if url proprerty is missing it gets 404', async () => {
 
     const savedBlog = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
 })

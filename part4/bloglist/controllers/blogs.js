@@ -45,10 +45,22 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
 
  
 // 2. delete a single blog (DELETE)
-blogsRouter.delete('/:id', async (request, response) => {
-    const deleted = await Blog.findByIdAndDelete(request.params.id)
-    if (deleted) {
-        response.status(204).end()
+blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
+    const blog = await Blog.findById(request.params.id)
+    if (!blog) {
+        return response.status(401).json({
+            error: 'blog not found'
+        })
+    }
+    const user = request.user
+
+    if (blog.user.toString() === user._id.toString()) {
+        const deletedBlog = await Blog.findByIdAndDelete(request.params.id)
+        return response.status(204).end()
+    } else {
+        return response.status(401).json({
+            error: 'authorization missing'
+        })
     }
 })
 
