@@ -2,6 +2,7 @@ const blogsRouter  = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const middleware = require('../utils/middleware')
 
 // GET REQUESTS
 
@@ -24,25 +25,15 @@ blogsRouter.get('/:id', async (request, response) => {
 // MODIFYING REQUEST
 
 // 1. create new blog (POST)
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
     const body = request.body
+    const user = request.user
     
-    // request.token --> from token extractor MW
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-    const user = await User.findById(decodedToken.id)
-
-    if (!user) {
-        return response.status(400).json({
-            error: 'userId missing or not valid'
-        })
-    }
-
     const blog = new Blog({
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes,
+        likes: body.likes || 0,
         user: user._id
     })
 
