@@ -8,6 +8,11 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    author: '',
+    url: ''
+  })
 
   useEffect(() => {
     if (user) {
@@ -52,6 +57,30 @@ const App = () => {
     setUser(null)
   }
 
+  const handleNewBlogChange = (event) => {
+    const { name, value } = event.target
+    setNewBlog(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const addBlog = async event => {
+    event.preventDefault()
+    
+    try {
+      const blog = await blogService.create(newBlog)
+      setBlogs([...blogs, blog])
+      setNewBlog({
+        title: '',
+        author: '',
+        url: ''
+      })
+
+    } catch (error) {
+      console.error('Blog creation failed:', error)
+    }
+  }
   if (user === null) {
     return (
       <div>
@@ -87,6 +116,45 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
+      <h2>create new</h2>
+
+      <form onSubmit={addBlog}>
+        
+        <div>
+          <label>title:
+            <input 
+              type="text" 
+              name='title'
+              value={newBlog.title}
+              onChange={handleNewBlogChange}
+          />
+          </label>
+        </div>
+
+        <div>
+          <label>author:
+            <input 
+              type='text'
+              name='author'
+              value={newBlog.author}
+              onChange={handleNewBlogChange} 
+          />
+          </label>
+        </div>
+
+        <div>
+          <label>url:
+            <input 
+              type="text"
+              name='url'
+              value={newBlog.url}
+              onChange={handleNewBlogChange}
+            />
+          </label>
+        </div>
+
+        <button type='submit'>create</button>
+      </form>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
