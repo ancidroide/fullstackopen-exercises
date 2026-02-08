@@ -25,6 +25,17 @@ blogSchema.set('toJSON', {
         returnedObject.id  = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v
+        // Convert user ObjectId to string if it exists and isn't already a string
+        if (returnedObject.user) {
+            // Check if user is an object with _id (populated) or just an ObjectId
+            if (typeof returnedObject.user === 'object' && returnedObject.user._id) {
+                // User is populated, convert the populated user's _id to id
+                returnedObject.user = returnedObject.user._id.toString()
+            } else if (typeof returnedObject.user !== 'string') {
+                // User is not populated, just an ObjectId, convert to string
+                returnedObject.user = returnedObject.user.toString()
+            }
+        }
     }
 })
 

@@ -5,6 +5,7 @@ const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 
 const app = express()
 
@@ -21,14 +22,15 @@ mongoose.connect(mongoUrl, { family: 4 })
   })
 
 // middleware
-app.use(express.static('disdt'))
+app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 
-// route
+// routes
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 // error middleware
 app.use(middleware.unknownEndpoint)

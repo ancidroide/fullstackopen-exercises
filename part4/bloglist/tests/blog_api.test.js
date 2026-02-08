@@ -74,7 +74,7 @@ test('a valid blog can be added', async () => {
         likes: 7,
         userId: userId,
     }
-
+    
     await api
       .post('/api/blogs/')
       .set('Authorization', `Bearer ${token}`)

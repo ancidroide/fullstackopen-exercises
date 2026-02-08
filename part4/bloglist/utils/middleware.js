@@ -2,6 +2,7 @@ const { request } = require('express')
 const logger = require('./logger')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const config = require('./config')
 
 
 const requestLogger = (request, response, next) => {
@@ -59,7 +60,7 @@ const userExtractor = async (request, response, next) => {
       return response.status(401).json({ error: 'token missing' })
     }
 
-    const decodedToken = jwt.verify(token, process.env.SECRET)
+    const decodedToken = jwt.verify(token, config.SECRET)
     if (!decodedToken.id) {
       return response.status(401).json({ error: 'token invalid' })
     }
@@ -72,7 +73,7 @@ const userExtractor = async (request, response, next) => {
     request.user = user
     next()
   } catch (error) {
-    next(error) // Passa l'errore (es. token scaduto) all'errorHandler
+    next(error) // Pass the error (e.g., expired token) to the errorHandler
   }
 }
 
