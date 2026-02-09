@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +14,8 @@ const App = () => {
     author: '',
     url: ''
   })
+  // state to store/show success/unsuccess notif
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     if (user) {
@@ -37,23 +40,40 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({ username, password })
-      
+
       // add user object to browser local storage
       window.localStorage.setItem(
-        'loggedBlogsappUser', 
+        'loggedBlogsappUser',
         JSON.stringify(user)
       )
 
       setUser(user)
       setUsername('')
       setPassword('')
+
+
+      setNotification({ message: `${user.name} logged in successfully`, type: 'success' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+
     } catch (error) {
-      console.error('Login failed:', error);  
+      console.error('Login failed:', error);
+      setNotification({ message: 'wrong username or password', type: 'error' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
     }
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogsappUser')
+
+    setNotification({ message: `${user.name} logged out successfully`, type: 'success' })
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+
     setUser(null)
   }
 
@@ -67,7 +87,7 @@ const App = () => {
 
   const addBlog = async event => {
     event.preventDefault()
-    
+
     try {
       const blog = await blogService.create(newBlog)
       setBlogs([...blogs, blog])
@@ -77,13 +97,25 @@ const App = () => {
         url: ''
       })
 
+      setNotification({ message: `New blog ${blog.title} by ${blog.author} created successfully`, type: 'success' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
+
     } catch (error) {
       console.error('Blog creation failed:', error)
+      setNotification({ message: 'Blog creation failed', type: 'error' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
     }
   }
+
   if (user === null) {
     return (
       <div>
+        {notification && <div className={`notification ${notification.type}`}>{notification.message}</div>}
+
         <h2>Login</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -114,6 +146,7 @@ const App = () => {
 
   return (
     <div>
+      {notification && <div className={`notification ${notification.type}`}>{notification.message}</div>}
       <h2>blogs</h2>
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       <h2>create new</h2>
