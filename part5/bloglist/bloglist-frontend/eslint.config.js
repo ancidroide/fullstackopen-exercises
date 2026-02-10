@@ -8,7 +8,8 @@ export default [
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2021,
+      sourceType: "module",
       globals: globals.browser,
       parserOptions: {
         ecmaVersion: 'latest',
@@ -27,7 +28,10 @@ export default [
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true }
-      ]
+      ],
+      "react/react-in-jsx-scope": "off",
+      "react-hooks/rules-of-hooks": "error",
+
     }
   }
 ]
