@@ -30,6 +30,7 @@ const BlogForm = (props) => {
                             name='title' 
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
+                            placeholder="title"
                         />
                     </label>
                 </div>
@@ -41,6 +42,7 @@ const BlogForm = (props) => {
                             name="author" 
                             value={author}
                             onChange={(e) => setAuthor(e.target.value)}
+                            placeholder="author"
                         />
                     </label>
                 </div>
@@ -52,6 +54,7 @@ const BlogForm = (props) => {
                             name="url"
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
+                            placeholder="url"
                         />
                     </label>
                 </div>

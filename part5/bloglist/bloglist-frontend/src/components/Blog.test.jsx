@@ -95,5 +95,4 @@ test('verify updateBlog gets called when like button clicked two times', async (
   await userEvent.click(likeButton)
 
   expect(mockHandler).toHaveBeenCalledTimes(2)
-  
 })
