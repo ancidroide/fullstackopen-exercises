@@ -16,11 +16,13 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './testSetup.js',
-    coverage: [
-      'node_modules/',
-      'testSetup.js',
-      '**/*.test.{js,jsx}',
-      '**/*.spec.{js,jsx}',
-    ]
+    coverage: {
+      exclude: [
+        'node_modules/',
+        'testSetup.js',
+        '**/*.test.{js,jsx}',
+        '**/*.spec.{js,jsx}',
+      ]
+    }
   }
 })
