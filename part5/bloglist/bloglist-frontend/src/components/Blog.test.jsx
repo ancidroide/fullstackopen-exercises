@@ -64,3 +64,36 @@ test('shows URL and likes when view button clicked', async () => {
   const likesElement = screen.getByText((content) => content.includes('likes:'))
   expect(likesElement).toBeInTheDocument()
 })
+
+// 5.16 (verify updateBlog .toHaveBeenCalledTimes(2) when like button clicked two times)
+test('verify updateBlog gets called when like button clicked two times', async () => {
+  const blog = {
+    title: 'title test',
+    author: 'author test',
+    url: 'http://test.com',
+    likes: 0,
+    user: {
+      id: '123',
+      name: 'Test User'
+    }
+  }
+
+  const user = {
+    id: '123',
+    name: 'Test User'
+  }
+
+
+  const mockHandler = vi.fn()
+  render(<Blog blog={blog} updateBlog={mockHandler} user={user} deleteBlog={() => {}} />)
+
+  const viewButton = screen.getByText('view')
+  await userEvent.click(viewButton)
+  
+  const likeButton = screen.getByText('like')
+  await userEvent.click(likeButton)
+  await userEvent.click(likeButton)
+
+  expect(mockHandler).toHaveBeenCalledTimes(2)
+  
+})
