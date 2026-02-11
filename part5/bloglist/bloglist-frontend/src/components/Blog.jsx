@@ -40,7 +40,7 @@ const Blog = ({ blog, updateBlog, user, deleteBlog }) => {
       </div>
 
       {visible && (
-        <div>
+        <div className="blog-details">
           url: {blog.url}
           <br />
           likes: {blog.likes}
