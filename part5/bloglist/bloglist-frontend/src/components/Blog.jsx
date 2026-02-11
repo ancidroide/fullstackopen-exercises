@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, user, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const toggleVisible = () => {
@@ -19,11 +19,16 @@ const Blog = ({ blog, updateBlog }) => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
-      user: blog.user._id,
+      user: blog.user.id,
     }
-    updateBlog(updatedBlog)
+    updateBlog(updatedBlog) // funcion passed from App.jsx
   }
-
+  
+  const handleDelete = async () => {
+    if (window.confirm(`Delete blog "${blog.title}"?`)) {
+      deleteBlog(blog) // funcion passed from App.jsx
+    } 
+  }
 
   return (
     <div style={blogStyle}>
@@ -42,6 +47,12 @@ const Blog = ({ blog, updateBlog }) => {
           <button onClick={handleLike}>like</button>
           <br />
           user: {blog.user.name}
+        </div>
+      )}
+
+      {blog.user && typeof blog.user === 'object' && blog.user.id === user.id && (
+        <div>
+          <button onClick={handleDelete}>delete</button>
         </div>
       )}
     </div>

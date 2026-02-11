@@ -101,15 +101,33 @@ const App = () => {
 
   const updateBlog = async (blogObject) => {
     try {
-      const blog = await blogService.update(blogObject)
-      setBlogs(blogs.map(b => {
-        b.id === blog.id ? blog : b
-      }))
+      const blog = await blogService.update(blogObject.id, blogObject)
+      setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
 
     } catch (error) {
       console.error('Blog update failed:', error)
     }
   }
+
+  const deleteBlog = async (blogObject) => {
+    try {
+      await blogService.deleteBlog(blogObject.id)
+      setBlogs(blogs.filter(b => b.id !== blogObject.id))
+
+      setNotification({ message: `Blog "${blogObject.title}" deleted successfully`, type: 'success' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+
+    } catch (error) {
+      console.error('Faile to delete blog:', error)
+      setNotification({ message: 'Failed to delete blog', type: 'error'})
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -154,7 +172,13 @@ const App = () => {
       </Togglable>
 
       {[...blogs].sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          updateBlog={updateBlog}
+          user={user}
+          deleteBlog={deleteBlog}
+        />
       )}
     </div>
   )
