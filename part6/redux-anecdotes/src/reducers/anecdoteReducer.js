@@ -24,7 +24,8 @@ export const voteAction = (id) => {
   return { type: 'VOTE', id: id}
 }
 
-export const createAnecdote = content => ({ type: 'NEW_ANECDOTE', anecdote: content})
+export const createAnecdote = content => 
+  ({ type: 'NEW_ANECDOTE', anecdote: asObject(content)})
 
 
 const reducer = (state = initialState, action) => {
@@ -36,7 +37,7 @@ const reducer = (state = initialState, action) => {
       return state.map(anecdote => anecdote.id === action.id ? {...anecdote, votes: anecdote.votes + 1} : anecdote)
 
     case 'NEW_ANECDOTE':
-      return [...state, asObject(action.anecdote)]
+      return [...state, action.anecdote]
  
   }
   return state
