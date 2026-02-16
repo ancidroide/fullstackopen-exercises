@@ -11,7 +11,7 @@ const AnecdoteList = () => {
         dispatch(voteAnecdote(id))
         const anecdote = anecdotes.find(anecdote => anecdote.id === id)
         dispatch(setNotificationWithTimer(
-          `you voted for ${anecdote.content}`))
+          `you voted for ${anecdote.content}`, 5))
     }
 
 
